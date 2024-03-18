@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+{% block title %}подробней{% endblock title %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <div class="row">
+      <div class="col-lg-6 col-md-6 col-sm-12">
+        <div class=" text-black p-2">
+          <h2></h2>
+        <img src="{{ product.image.first.image.url }}" class="product-image pd-3" style="max-width: 320px; min-width: 100px; height:230px" alt="{{ product.title }}">
+        
+        <p class="mt-3">{% for item in product.image.all %}
+        <img src="{{ item.image.url }}" class="product-image" style="max-width: 90px; height:80px" alt="{{ product.title }}">
+  
+            {% endfor %}
+          <h2>характеристика</h2>
+<table class="table table-bordered">
+  <thead>
+    <tr>
+      <th>ключ</th>
+      <th>значение</th>
+    </tr>
+  </thead>
+  <tbody>
+    
+    {% for item in product.atribute.all %}
+    <tr>
+        <td>{{item.name}}</td>
+        <td>{{item.value}}</td>
+    </tr>
+    {% endfor %}
+        
+    
+   
+  </tbody>
+</table>
+        </div>
+      </div>
+      <div class="col-lg-6 col-md-6 col-sm-12">
+        <div class=" text-black p-3">
+          <h2>{{product.title}}</h2>
+          <p>категория: {{product.category}}</p>
+          <p>тэги:
+          {% for tag in product.tags.all %}
+                                <span>{{ tag.name }}</span> /
+                            {% endfor %}</p>
+          <h3>Цена:{{product.price}}</h3>
+          <p>{{product.content}}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+<div class="container mt-4">  
+    <div id="imageModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="imageModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable modal-dialog-centered  ">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <img id="modalImage" src="" class="img-fluid">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock content %}
+
+
+{% block scripts %}
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const modal = new bootstrap.Modal(document.getElementById('imageModal'), {
+            keyboard: true
+        });
+
+        const images = document.querySelectorAll('.product-image');
+        images.forEach(image => {
+            image.addEventListener('click', function () {
+                const modalImage = document.getElementById('modalImage');
+                modalImage.src = this.src;
+                modal.show();
+            });
+        });
+
+        const modalImage = document.getElementById('modalImage');
+        modalImage.addEventListener('click', function (e) {
+            const currentImageIndex = Array.from(images).findIndex(image => image.src === this.src);
+            if (e.clientX < window.innerWidth / 2) {
+                const previousImageIndex = (currentImageIndex - 1 + images.length) % images.length;
+                modalImage.src = images[previousImageIndex].src;
+            } else {
+                const nextImageIndex = (currentImageIndex + 1) % images.length;
+                modalImage.src = images[nextImageIndex].src;
+            }
+        });
+    });
+</script>
+
+
+{% endblock scripts %}

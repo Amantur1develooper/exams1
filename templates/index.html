@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% block title %}Главная{% endblock title %}
+
+{% block content %}
+<div class="row">
+    {% for item in product %}
+        <div class="col-lg-3 col-md-4 col-sm-6 col-12 mb-4">
+            <div class="card h-100">
+
+                <div id="carouselExample" class="carousel slide">
+                    <div class="carousel-inner">
+                    {% for bitem in item.image.all %}
+                      <div class="carousel-item active">
+                        <img src="{{ bitem.image.url }}" class="d-block w-100" alt="...">
+                      </div>
+                    {% endfor %}
+                      
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+                      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                      <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+                      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                      <span class="visually-hidden">Next</span>
+                    </button>
+                  </div>
+
+
+                <div class="card-body">
+                    <h5 class="card-title">{{ item.title }}</h5>
+                    <h6>{{ item.category.name }}</h6>
+                    <p class="card-text">{{ item.content|slice:":50" }}</p>
+                    <div class="d-flex">
+                        <p>
+                            {% for tag in item.tags.all %}
+                                <span>{{ tag.name }}</span> /
+                            {% endfor %}
+                        </p>
+                    <h4> Цена:{{item.price}}</h4>
+                </div>
+                    <a href="{% url 'detail' id=item.id %}" class="btn btn-primary">View</a>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+{% if product.has_previous or product.has_next %}
+        <nav>
+            <ul class="pagination">
+                {% if product.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ product.previous_page_number }}">
+                            <i class="fa-solid fa-angle-left"></i>
+                        </a>
+                    </li>
+                {% endif %}
+
+                {% for i in product.paginator.page_range %}
+                    {% if product.number == i %}
+                        <li class="page-item active">
+                            <span class="page-link">{{ i }}</span>
+                        </li>
+                    {% else %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+
+                {% if product.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ product.next_page_number }}">
+                            <i class="fa-solid fa-angle-right"></i>
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+    {% endif %}
+{% endblock content %}
+    
