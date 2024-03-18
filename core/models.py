@@ -19,7 +19,7 @@ class Image(models.Model):
     class Meta:
         verbose_name = 'изображение'
         verbose_name_plural = 'изображении'
-    product = models.ForeignKey('Product', on_delete=models.PROTECT, related_name='image', blank=True, null=True)
+    product = models.ForeignKey('Product', on_delete=models.PROTECT, related_name='images', blank=True, null=True)
     name = models.CharField(max_length=70, verbose_name='название', unique=True, blank=True, null=True)
     image = models.ImageField(verbose_name='изображение', upload_to='images/', null=True)
     
